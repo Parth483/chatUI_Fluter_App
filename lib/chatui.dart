@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutterchatapp/chatuiCtr.dart';
+import 'package:flutterchatapp/chatUICtr.dart';
 import 'package:flutterchatapp/components/chat_bubble.dart';
 import 'package:flutterchatapp/configs/colors_constant.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';

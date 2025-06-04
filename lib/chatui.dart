@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutterchatapp/chatuiCtr.dart';
 import 'package:flutterchatapp/components/chat_bubble.dart';
+import 'package:flutterchatapp/configs/colors_constant.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get/instance_manager.dart';
 import 'package:get/route_manager.dart';
@@ -74,15 +75,32 @@ class _ChatuiState extends State<Chatui> {
                   ),
                   child: Row(
                     children: [
-                      IconButton(
-                        icon: Icon(
-                          Icons.arrow_back,
-                          color: Colors.black87,
-                          size: 2.5.h,
+                      GestureDetector(
+                        onTap: () {
+                          Get.back();
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: darkPurple,
+                          ),
+                          child: Icon(
+                            Icons.arrow_back,
+                            color: Colors.black87,
+                            size: 2.5.h,
+                          ),
                         ),
-                        onPressed: () => Get.back(),
                       ),
-                      SizedBox(width: 2.w),
+                      // IconButton(
+                      //   icon: Icon(
+                      //     Icons.arrow_back,
+                      //     color: Colors.black87,
+                      //     size: 2.5.h,
+                      //   ),
+                      //   onPressed: () => Get.back(),
+                      // ),
+                      SizedBox(width: 3.w),
                       Container(
                         width: 6.h,
                         height: 6.h,
@@ -189,7 +207,7 @@ class _ChatuiState extends State<Chatui> {
                                     minHeight: 5.h,
                                   ),
                                   icon: Transform.translate(
-                                    offset: Offset(1.w, 0),
+                                    offset: Offset(0.5.w, 0),
                                     child: Icon(
                                       Icons.send,
                                       color: Colors.white,

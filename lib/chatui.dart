@@ -103,14 +103,14 @@ class _ChatuiState extends State<Chatui> {
                           Text(
                             'Ms. Emily',
                             style: TextStyle(
-                              fontSize: 14.sp,
+                              fontSize: 16.sp,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
                           Text(
                             'Online',
                             style: TextStyle(
-                              fontSize: 10.sp,
+                              fontSize: 15.sp,
                               color: Colors.green,
                             ),
                           ),

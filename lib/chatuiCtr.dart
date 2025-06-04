@@ -19,11 +19,13 @@ class ChatController extends GetxController {
   final currentUserId = 'user1';
   final otherUserId = 'user2';
   final messages = <Message>[].obs;
+  final isOnline = true.obs;
 
   @override
   void onInit() {
     super.onInit();
     _fetchMessages();
+    _simulateStatusChanges();
   }
 
   void _fetchMessages() {
@@ -79,5 +81,18 @@ class ChatController extends GetxController {
       );
       messages.insert(0, reply);
     });
+  }
+
+  void _simulateStatusChanges() {
+    Future.delayed(const Duration(seconds: 5), () {
+      isOnline.value = false;
+      Future.delayed(const Duration(seconds: 3), () {
+        isOnline.value = true;
+      });
+    });
+  }
+
+  void toggleOnlineStatus() {
+    isOnline.value = !isOnline.value;
   }
 }

@@ -101,18 +101,43 @@ class _ChatuiState extends State<Chatui> {
                       //   onPressed: () => Get.back(),
                       // ),
                       SizedBox(width: 3.w),
-                      Container(
-                        width: 6.h,
-                        height: 6.h,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.amber,
-                        ),
-                        child: Icon(
-                          Icons.person,
-                          color: Colors.white,
-                          size: 3.h,
-                        ),
+                      Stack(
+                        children: [
+                          Container(
+                            width: 6.h,
+                            height: 6.h,
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.amber,
+                            ),
+                            child: Icon(
+                              Icons.person,
+                              color: Colors.white,
+                              size: 3.h,
+                            ),
+                          ),
+                          Positioned(
+                            top: 0,
+                            right: 0,
+                            child: Obx(
+                              () => Container(
+                                width: 1.5.h,
+                                height: 1.5.h,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color:
+                                      controller.isOnline.value
+                                          ? Colors.green
+                                          : Colors.grey,
+                                  border: Border.all(
+                                    color: Colors.white,
+                                    width: 2,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       SizedBox(width: 3.w),
                       Column(
@@ -129,7 +154,7 @@ class _ChatuiState extends State<Chatui> {
                             'Online',
                             style: TextStyle(
                               fontSize: 15.sp,
-                              color: Colors.green,
+                              color: Colors.grey[600],
                             ),
                           ),
                         ],

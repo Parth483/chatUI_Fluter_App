@@ -151,7 +151,7 @@ class _ChatuiState extends State<Chatui> {
                             ),
                           ),
                           Text(
-                            'Online',
+                            controller.isOnline.value ? 'Online' : 'Offline',
                             style: TextStyle(
                               fontSize: 15.sp,
                               color: Colors.grey[600],

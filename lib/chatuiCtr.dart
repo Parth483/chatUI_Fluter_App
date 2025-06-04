@@ -1,4 +1,3 @@
-import 'package:flutter_chat_core/flutter_chat_core.dart';
 import 'package:get/get.dart';
 
 class Message {

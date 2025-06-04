@@ -17,11 +17,37 @@ class Chatui extends StatefulWidget {
 class _ChatuiState extends State<Chatui> {
   final controller = Get.put(ChatController());
   final TextEditingController _textController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+  bool _showScrollToBottom = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_scrollListener);
+  }
 
   @override
   void dispose() {
     _textController.dispose();
+    _scrollController.dispose();
     super.dispose();
+  }
+
+  void _scrollListener() {
+    if (_scrollController.hasClients) {
+      final position = _scrollController.position;
+      setState(() {
+        _showScrollToBottom = position.pixels > 100;
+      });
+    }
+  }
+
+  void _scrollToBottom() {
+    _scrollController.animateTo(
+      0,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOut,
+    );
   }
 
   @override
@@ -29,146 +55,184 @@ class _ChatuiState extends State<Chatui> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Column(
+        child: Stack(
           children: [
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.1),
-                    spreadRadius: 1,
-                    blurRadius: 1,
-                  ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: Icon(
-                      Icons.arrow_back,
-                      color: Colors.black87,
-                      size: 2.5.h,
-                    ),
-                    onPressed: () => Get.back(),
-                  ),
-                  SizedBox(width: 2.w),
-                  Container(
-                    width: 6.h,
-                    height: 6.h,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.amber,
-                    ),
-                    child: Icon(Icons.person, color: Colors.white, size: 3.h),
-                  ),
-                  SizedBox(width: 3.w),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Ms. Emily',
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      Text(
-                        'Online',
-                        style: TextStyle(fontSize: 10.sp, color: Colors.green),
+            Column(
+              children: [
+                // Header
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.1),
+                        spreadRadius: 1,
+                        blurRadius: 1,
                       ),
                     ],
                   ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: Obx(
-                () => ListView.builder(
-                  padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 2.h),
-                  itemCount: controller.messages.length,
-                  reverse: true,
-                  itemBuilder: (context, index) {
-                    final message = controller.messages[index];
-                    final time = DateFormat(
-                      'h:mm a',
-                    ).format(message.createdAt.toLocal());
-                    return ChatBubble(
-                      message: message.text,
-                      isMe: message.authorId == controller.currentUserId,
-                      time: time,
-                    );
-                  },
-                ),
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
-              color: Colors.white,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFF1F0F5),
-                        borderRadius: BorderRadius.circular(35),
+                  child: Row(
+                    children: [
+                      IconButton(
+                        icon: Icon(
+                          Icons.arrow_back,
+                          color: Colors.black87,
+                          size: 2.5.h,
+                        ),
+                        onPressed: () => Get.back(),
                       ),
-                      child: Row(
+                      SizedBox(width: 2.w),
+                      Container(
+                        width: 6.h,
+                        height: 6.h,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.amber,
+                        ),
+                        child: Icon(
+                          Icons.person,
+                          color: Colors.white,
+                          size: 3.h,
+                        ),
+                      ),
+                      SizedBox(width: 3.w),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Expanded(
-                            child: TextField(
-                              controller: _textController,
-                              style: TextStyle(fontSize: 15.sp),
-                              decoration: InputDecoration(
-                                hintText: 'Type message...',
-                                hintStyle: TextStyle(
-                                  color: Colors.grey[400],
-                                  fontSize: 15.sp,
-                                ),
-                                border: InputBorder.none,
-                                contentPadding: EdgeInsets.symmetric(
-                                  horizontal: 6.w,
-                                  vertical: 2.h,
-                                ),
-                              ),
+                          Text(
+                            'Ms. Emily',
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
-                          Container(
-                            margin: EdgeInsets.all(0.8.h),
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Color(0xFF8B5CF6),
-                            ),
-                            child: IconButton(
-                              padding: EdgeInsets.zero,
-                              constraints: BoxConstraints(
-                                minWidth: 5.h,
-                                minHeight: 5.h,
-                              ),
-                              icon: Transform.translate(
-                                offset: Offset(1.w, 0),
-                                child: Icon(
-                                  Icons.send,
-                                  color: Colors.white,
-                                  size: 2.5.h,
-                                ),
-                              ),
-                              onPressed: () {
-                                if (_textController.text.trim().isNotEmpty) {
-                                  controller.addMessage(_textController.text);
-                                  _textController.clear();
-                                }
-                              },
+                          Text(
+                            'Online',
+                            style: TextStyle(
+                              fontSize: 10.sp,
+                              color: Colors.green,
                             ),
                           ),
                         ],
                       ),
+                    ],
+                  ),
+                ),
+                // Chat List
+                Expanded(
+                  child: Obx(
+                    () => ListView.builder(
+                      controller: _scrollController,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 2.w,
+                        vertical: 2.h,
+                      ),
+                      itemCount: controller.messages.length,
+                      reverse: true,
+                      itemBuilder: (context, index) {
+                        final message = controller.messages[index];
+                        final time = DateFormat(
+                          'h:mm a',
+                        ).format(message.createdAt.toLocal());
+                        return ChatBubble(
+                          message: message.text,
+                          isMe: message.authorId == controller.currentUserId,
+                          time: time,
+                        );
+                      },
                     ),
                   ),
-                ],
-              ),
+                ),
+                // Input Field
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
+                  color: Colors.white,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF1F0F5),
+                            borderRadius: BorderRadius.circular(35),
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: TextField(
+                                  controller: _textController,
+                                  style: TextStyle(fontSize: 15.sp),
+                                  decoration: InputDecoration(
+                                    hintText: 'Type message...',
+                                    hintStyle: TextStyle(
+                                      color: Colors.grey[400],
+                                      fontSize: 15.sp,
+                                    ),
+                                    border: InputBorder.none,
+                                    contentPadding: EdgeInsets.symmetric(
+                                      horizontal: 6.w,
+                                      vertical: 2.h,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                margin: EdgeInsets.all(0.8.h),
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Color(0xFF8B5CF6),
+                                ),
+                                child: IconButton(
+                                  padding: EdgeInsets.zero,
+                                  constraints: BoxConstraints(
+                                    minWidth: 5.h,
+                                    minHeight: 5.h,
+                                  ),
+                                  icon: Transform.translate(
+                                    offset: Offset(1.w, 0),
+                                    child: Icon(
+                                      Icons.send,
+                                      color: Colors.white,
+                                      size: 2.5.h,
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    if (_textController.text
+                                        .trim()
+                                        .isNotEmpty) {
+                                      controller.addMessage(
+                                        _textController.text,
+                                      );
+                                      _textController.clear();
+                                    }
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
+            if (_showScrollToBottom)
+              Positioned(
+                right: 4.w,
+                bottom: 12.h,
+                child: FloatingActionButton(
+                  mini: true,
+                  backgroundColor: Colors.white,
+                  elevation: 2,
+                  onPressed: _scrollToBottom,
+                  child: Icon(
+                    Icons.keyboard_arrow_down,
+                    color: const Color(0xFF8B5CF6),
+                    size: 3.h,
+                  ),
+                ),
+              ),
           ],
         ),
       ),
